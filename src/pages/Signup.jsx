@@ -7,21 +7,21 @@ const Signup = () => {
   const { signupFormSubmit } = useContext(UserContext);
 
   // Prefilled form fields for dev convenience.
-  const INITIAL_FORM_DATA ={
-      firstName:'guest',
-      lastName:'guest',
-      email:'guest@gmail.com',
-      username:'guestuser',
-      password:'123456'
-  }
+  // const INITIAL_FORM_DATA ={
+  //     firstName:'keith',
+  //     lastName:'singletary',
+  //     email:'keith@gmail.com',
+  //     username:'keithsing',
+  //     password:'123456'
+  // }
   // Use this version of initial data for prod
-  // const INITIAL_FORM_DATA = {
-  //   firstName: "",
-  //   lastName: "",
-  //   email: "",
-  //   username: "",
-  //   password: "",
-  // };
+  const INITIAL_FORM_DATA = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    username: "",
+    password: "",
+  };
 
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
