@@ -68,6 +68,15 @@ const Signup = () => {
             <TextField
               className="m-2 p-2 rounded-lg"
               type="text"
+              name="email"
+              id="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            <TextField
+              className="m-2 p-2 rounded-lg"
+              type="text"
               name="username"
               id="username"
               placeholder="Pick a username"
