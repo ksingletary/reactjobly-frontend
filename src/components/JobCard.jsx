@@ -6,40 +6,39 @@ import { Card, CardActions, CardContent, Typography } from "@mui/material";
 
 const JobCard = ({ title, salary, equity, id, companyName }) => {
   const { currentUser } = useContext(UserContext);
-
-  const { applications } = currentUser;
-
-  // For each job, evaluate if user has applied or not. Result is passed to the Apply button element.
-
-  const [hasApplied, setHasApplied] = useState(() => {
-    return applications && applications.includes(id);
-});
-
   
+  // Add a safety check for currentUser and its properties
+  const applications = currentUser ? currentUser.applications : [];
 
-  // Use api to apply based on username and job id.
-  // Upon success, set state of hasApplied to true
+  // Check if user has applied
+  const [hasApplied, setHasApplied] = useState(() => applications.includes(id));
+
+  // Use API to apply based on username and job id
   const applyToJob = async () => {
     try {
-      // console.log('username',currentUser.username,'id',id)
+      if (!currentUser) {
+        console.error("User is not logged in.");
+        return;  // Optionally handle this case in your UI, e.g., by showing a login prompt
+      }
+      console.log("Applying with:", currentUser.username, id);  // Ensure these values are correct
       await JoblyApi.applyToJob(currentUser.username, id);
-      // console.log("applied res:", res);
-      console.log("you applied to job", id, title);
+      console.log("Successfully applied to job", id, title);
       setHasApplied(true);
     } catch (error) {
-      console.log("error applying:", error);
+      console.error("Error applying to job:", id, "Error:", error);
     }
   };
-
 
   return (
     <Card sx={{ width: 325 }}>
       <CardContent>
         <Typography variant="h5">{title}</Typography>
         <Typography variant="h6">{companyName}</Typography>
-        {salary && (<Typography variant="body1">
-          ${salary || 0} salary & {(equity * 100).toFixed(2)}% equity
-        </Typography>)}
+        {salary && (
+          <Typography variant="body1">
+            ${salary.toLocaleString()} salary & {(equity * 100).toFixed(2)}% equity
+          </Typography>
+        )}
       </CardContent>
       <CardActions>
         <ApplyButton

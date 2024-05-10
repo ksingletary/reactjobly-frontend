@@ -27,7 +27,7 @@ const JobsList = () => {
   }, [currentUser.applications]);
 
   return (
-    <Container align="auto">
+    <Container align="auto" sx={{ mt: 18, mx: 3, minWidth: '100%' }}>
       <div className="m-3">
         <h1 className="text-5xl">Jobs</h1>
       </div>

@@ -8,10 +8,10 @@ const Login = () => {
 
   // Prefilled form fields for dev convenience.
   const INITIAL_FORM_DATA = {
-    //username: "keithsing",
-    //password: "123456",
+    // username: "guestuser",
+    // password: "123456",
     username: "",
-    password: "",
+    password: ""
   };
 
   const { loginFormSubmit } = useContext(UserContext);

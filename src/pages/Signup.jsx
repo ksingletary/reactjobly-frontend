@@ -20,7 +20,7 @@ const Signup = () => {
     lastName: "",
     email: "",
     username: "",
-    password: "",
+    password: ""
   };
 
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);

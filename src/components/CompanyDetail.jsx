@@ -1,69 +1,72 @@
 import { useParams } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { Grid, Box, Typography, Paper } from "@mui/material";
 import JoblyApi from "../../api";
-import { useState, useEffect } from "react";
 import JobCard from "./JobCard";
-
-// Page for a single company
-// Should have the company description and a list of jobs for this company
-// should make an API call to
+import UserContext from "../context/UserContext";
 
 const Company = () => {
   const { handle } = useParams();
   const [company, setCompany] = useState({});
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
+  const { currentUser } = useContext(UserContext);
 
-  
   useEffect(() => {
-    // define the async function to fetch company data
-    // console.log('use effect, handle is',handle)
     async function getCompany(handle) {
-      let res = await JoblyApi.getCompany(handle);
-      setCompany(res);
-      setIsLoading(false)
+      try {
+        let res = await JoblyApi.getCompany(handle);
+        setCompany(res);
+      } catch (error) {
+        console.error("Failed to fetch company details:", error);
+      }
+      setIsLoading(false);
     }
-    setIsLoading(true)
+    setIsLoading(true);
     getCompany(handle);
-  }, []);
-
-  // expect a company's jobs array to look like
-  // "jobs": [
-  //     {
-  //     "id": 7,
-  //     "title": "Technical brewer",
-  //     "salary": 157000,
-  //     "equity": "0"
-  //     },
-  // ]
+  }, [handle]);
 
   return (
-    <>
-      <div className="m-6 p-4">
-        {!company && <div> Let me get that for you....</div>}
-        {!isLoading && (
-          <div>
-            <h1>{company.name || ""}</h1>
-            <p className="p-6 max-w-xl">{company.description}</p>
-            <div className="m-4 text-3xl">
-              <h3>Jobs for {company.name}</h3>
-            </div>
-            <div>
-              {company.jobs
-                .filter(job => job.id && !isNaN(job.id))
-                .map(({ id, title, salary, equity }) => (
+    <Box sx={{ p: 4, mx: 'auto', mt: 18, maxWidth: 1200 }}>
+      {isLoading ? (
+        <Typography>Loading company data...</Typography>
+      ) : (
+        company && (
+          <Paper sx={{ p: 4, mb: 4 }}>
+            <Typography variant="h3">{company.name}</Typography>
+            <Typography variant="body1" sx={{ mt: 2, mb: 4 }}>
+              {company.description}
+            </Typography>
+          </Paper>
+        )
+      )}
+
+      {!isLoading && company.jobs && (
+        <>
+          <Typography variant="h4" sx={{ mb: 3 }}>
+            Jobs at {company.name}
+          </Typography>
+          {company.jobs.length ? (
+            <Grid container spacing={3}>
+              {company.jobs.map(job => (
+                <Grid item xs={12} sm={6} md={4} key={job.id}>
                   <JobCard
-                    key={id}
-                    title={title}
-                    salary={salary}
-                    equity={equity}
+                    title={job.title}
+                    salary={job.salary}
+                    equity={job.equity}
+                    id={job.id}
+                    companyName={company.name}
+                    currentUser={currentUser}
                   />
-                ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Typography>No jobs listed.</Typography>
+          )}
+        </>
+      )}
+    </Box>
   );
-  
 };
 
 export default Company;
