@@ -1,20 +1,12 @@
 import { useState, useContext } from "react";
+import { Navigate } from 'react-router-dom'; // Import useNavigate
 import UserContext from "../context/UserContext";
 import { TextField, Button, Stack, Box, Container } from "@mui/material";
 
 const Signup = () => {
-  // get context from context holder
   const { signupFormSubmit } = useContext(UserContext);
+  const { currentUser } = useContext(UserContext);
 
-  // Prefilled form fields for dev convenience.
-  // const INITIAL_FORM_DATA ={
-  //     firstName:'keith',
-  //     lastName:'singletary',
-  //     email:'keith@gmail.com',
-  //     username:'keithsing',
-  //     password:'123456'
-  // }
-  // Use this version of initial data for prod
   const INITIAL_FORM_DATA = {
     firstName: "",
     lastName: "",
@@ -30,13 +22,14 @@ const Signup = () => {
     setFormData((formData) => ({ ...formData, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    console.log('signup submitted')
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // do something with the form data
-    signupFormSubmit(formData);
-    // reset the form
-    setFormData(() => INITIAL_FORM_DATA);
+    await signupFormSubmit(formData);
+    setFormData(INITIAL_FORM_DATA);
+
+  }
+  if (currentUser) {
+    return <Navigate to="/" />; // Redirect to the home page using useNavigate
   };
 
   return (
@@ -46,7 +39,6 @@ const Signup = () => {
         <h2 className="text">Enter your information to get started</h2>
         <form onSubmit={handleSubmit}>
           <Stack spacing={3}>
-          {/* <label htmlFor="firstName">/label> */}
             <TextField
               className="m-2 p-2 rounded-lg"
               type="text"
@@ -93,7 +85,7 @@ const Signup = () => {
               onChange={handleChange}
             />
             <Box margin="auto">
-              <Button type="submit" sx={{ width: 170, height: 50 }} variant="contained">
+              <Button onClick={handleSubmit} type="submit" sx={{ width: 170, height: 50 }} variant="contained">
                 Sign Up
               </Button>
             </Box>

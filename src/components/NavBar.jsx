@@ -1,16 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Stack, Button, Box } from '@mui/material';
 import { useContext } from 'react';
+import { Navigate } from 'react-router-dom';
+
 import UserContext from '../context/UserContext';
 
 const Navbar = () => {
-  const { setToken, currentUser, LOCAL_STORAGE_KEY } = useContext(UserContext);
+  const { currentUser, setToken, LOCAL_STORAGE_KEY, logoutUser, setCurrentUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   // Log out the user. Removes their token and data from local storage
   const handleLogout = () => {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
     setToken(null);
+    setCurrentUser(null);
+    navigate('/');
   };
 
   return (
@@ -18,7 +22,6 @@ const Navbar = () => {
       <AppBar position="fixed">
         <Toolbar>
           <Typography
-            onClick={() => navigate('/')}
             variant="h6"
             component="div"
             align="left"
@@ -29,7 +32,7 @@ const Navbar = () => {
             </Link>
           </Typography>
           <Stack direction="row" spacing={2}>
-            {currentUser.username ? (
+            {currentUser ? (
               <>
                 <Button color="inherit" onClick={() => navigate('/companies')}>Companies</Button>
                 <Button color="inherit" onClick={() => navigate('/jobs')}>Jobs</Button>

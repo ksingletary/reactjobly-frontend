@@ -1,10 +1,9 @@
 import { useContext, useState } from "react";
 import UserContext from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import {Navigate} from 'react-router-dom'
 import { TextField, Button, Box, Container, Stack } from "@mui/material";
 
 const Login = () => {
-  const navigate = useNavigate();
 
   // Prefilled form fields for dev convenience.
   const INITIAL_FORM_DATA = {
@@ -14,7 +13,7 @@ const Login = () => {
     password: ""
   };
 
-  const { loginFormSubmit } = useContext(UserContext);
+  const { loginFormSubmit, currentUser } = useContext(UserContext);
 
   const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
@@ -28,10 +27,11 @@ const Login = () => {
     e.preventDefault();
     loginFormSubmit(formData);
     // take person to companies page after 1 second
-    setTimeout(() => {
-      navigate("/companies");
-    }, 1000);
   };
+  if (currentUser) {
+    return <Navigate to="/" />;
+}
+
 
   return (
     <>

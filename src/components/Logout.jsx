@@ -1,17 +1,17 @@
-import {Navigate} from 'react-router-dom'
-import {useContext} from 'react'
-import UserContext from '../context/UserContext'
+import { Navigate } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
+import UserContext from '../context/UserContext';
 
 const Logout = () => {
-    // log the user out
-    const {logoutUser, setCurrentUser} = useContext(UserContext)
-    setCurrentUser('')
-    logoutUser()
-    return (
-        <>
-        <Navigate onClick={() => logoutUser()} to="/"/>
-        </>
-     )
-}
+    const { logoutUser, setCurrentUser } = useContext(UserContext);
 
-export default Logout
+    useEffect(() => {
+        logoutUser(); // Logout the user
+        setCurrentUser(''); // Clear current user data
+    }, [setCurrentUser, logoutUser]);
+
+    // Render the Navigate component to redirect to the home page
+    return <Navigate to="/" />;
+};
+
+export default Logout;
